@@ -50,7 +50,7 @@ document.getElementById('eventPassForm').addEventListener('submit', function(e) 
         doc.text("Freshers Party", 20, 20);
         doc.text(`Name: ${name}`, 20, 30);
         doc.text(`Class: ${classYear}`, 20, 40);
-        doc.text("Date: 19/10/2024", 20, 50);
+        doc.text("Date: 19/10/2025", 20, 50);
         doc.text("Venue: Baramati Club", 20, 60);
         
         // Add QR code image to PDF
@@ -60,3 +60,8 @@ document.getElementById('eventPassForm').addEventListener('submit', function(e) 
         doc.save('event_pass.pdf');
     };
 });
+
+// Redirect to scanner page
+document.getElementById('goToScannerBtn').onclick = function() {
+    window.location.href = 'scan.html';
+};
