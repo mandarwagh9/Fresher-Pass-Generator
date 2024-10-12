@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Reader</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/jsqr/dist/jsQR.js"></script> <!-- Ensure this is the correct CDN -->
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>QR Code Reader</h1>
+        <video id="video" width="100%" autoplay></video>
+        <canvas id="canvas" style="display: none;"></canvas>
+        <div id="result"></div>
+        <button id="scanButton">Start Scanning</button>
+        <div class="navigation">
+            <a href="index.html">Go to QR Code Generator</a>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            const result = $('#result');
+            let scanning = false;
+
+            // Access the camera
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+                .then(function(stream) {
+                    video.srcObject = stream;
+                    video.setAttribute("playsinline", true); // Required to tell iOS Safari we don't want fullscreen
+                    video.play();
+                })
+                .catch(function(err) {
+                    console.error('Error accessing camera: ' + err);
+                    result.text('Error accessing camera. Please check permissions.');
+                });
+
+            $('#scanButton').click(function() {
+                scanning = !scanning; // Toggle scanning state
+                $(this).text(scanning ? 'Stop Scanning' : 'Start Scanning');
+                if (scanning) {
+                    requestAnimationFrame(scanQRCode);
+                }
+            });
+
+            function scanQRCode() {
+                if (scanning && video.readyState === video.HAVE_ENOUGH_DATA) {
+                    canvas.height = video.videoHeight;
+                    canvas.width = video.videoWidth;
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const decodedData = jsQR(imageData.data, canvas.width, canvas.height);
+                    
+                    if (decodedData) {
+                        result.text('Decoded Data: ' + customDecode(decodedData.data));
+                        scanning = false; // Stop scanning
+                        $('#scanButton').text('Start Scanning'); // Reset button text
+                    } else {
+                        result.text('Scanning...');
+                    }
+                }
+                if (scanning) {
+                    requestAnimationFrame(scanQRCode);
+                }
+            }
+        });
+
+        // Custom encoding/decoding functions
+        function customEncode(data) {
+            return btoa(data); // Simple Base64 encoding
+        }
+
+        function customDecode(encodedData) {
+            return atob(encodedData); // Simple Base64 decoding
+        }
+    </script>
+</body>
+</html>
