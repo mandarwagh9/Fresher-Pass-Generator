@@ -28,7 +28,7 @@ document.getElementById('eventPassForm').addEventListener('submit', function(e) 
         <p><strong>Name:</strong> ${name}</p>
         <p><strong>Class:</strong> ${classYear}</p>
         <p><strong>Date:</strong> 19/10/2025</p>
-        <p><strong>Venue:</strong> Baramati Club</p>
+        <p><strong>Venue:</strong> Leela’s Restaurant & Banquets</p>
         <img src="${qrCodeURL}" alt="QR Code" id="qrImage">
     `;
 
