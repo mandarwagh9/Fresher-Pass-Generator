@@ -47,11 +47,11 @@ document.getElementById('eventPassForm').addEventListener('submit', function(e) 
         const imgData = imgElement.src;
 
         // Add text to PDF
-        doc.text("Freshers Party", 20, 20);
+        doc.text("Freshers Party 2024", 20, 20);
         doc.text(`Name: ${name}`, 20, 30);
         doc.text(`Class: ${classYear}`, 20, 40);
         doc.text("Date: 19/10/2025", 20, 50);
-        doc.text("Venue: Baramati Club", 20, 60);
+        doc.text("Venue: Leela’s Restaurant & Banquets", 20, 60);
         
         // Add QR code image to PDF
         doc.addImage(imgData, 'PNG', 20, 70, 40, 40); // Adjust dimensions as needed
