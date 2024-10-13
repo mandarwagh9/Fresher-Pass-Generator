@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="styles.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://unpkg.com/jsqr/dist/jsQR.js"></script>
+    <script defer src="script.js"></script>
 </head>
 <body>
     <div class="container">
@@ -32,7 +33,7 @@
             navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
                 .then(function(stream) {
                     video.srcObject = stream;
-                    video.setAttribute("playsinline", true); // Required to tell iOS Safari we don't want fullscreen
+                    video.setAttribute("playsinline", true);
                     video.play();
                 })
                 .catch(function(err) {
@@ -41,7 +42,7 @@
                 });
 
             $('#scanButton').click(function() {
-                scanning = !scanning; // Toggle scanning state
+                scanning = !scanning; 
                 $(this).text(scanning ? 'Stop Scanning' : 'Start Scanning');
                 if (scanning) {
                     requestAnimationFrame(scanQRCode);
@@ -57,11 +58,12 @@
                     const decodedData = jsQR(imageData.data, canvas.width, canvas.height);
                     
                     if (decodedData) {
-                        result.text('Decoded Data: ' + customDecode(decodedData.data));
-                        scanning = false; // Stop scanning
-                        $('#scanButton').text('Start Scanning'); // Reset button text
+                        const structuredData = customDecode(decodedData.data);
+                        displayData(structuredData);
+                        scanning = false;
+                        $('#scanButton').text('Start Scanning');
                     } else {
-                        result.text('Scanning...'); // Indicate that scanning is ongoing
+                        result.text('Scanning...');
                     }
                 }
                 if (scanning) {
@@ -70,13 +72,31 @@
             }
         });
 
-        // Custom encoding/decoding functions
-        function customEncode(data) {
-            return btoa(data); // Simple Base64 encoding
+        // Custom decoding function
+        function customDecode(encodedData) {
+            const data = atob(encodedData).split('\n'); // Split data by line
+            const structuredData = {};
+
+            data.forEach(item => {
+                const [key, value] = item.split(': ');
+                if (key && value) {
+                    structuredData[key.trim()] = value.trim(); // Create an object from key-value pairs
+                }
+            });
+
+            return structuredData;
         }
 
-        function customDecode(encodedData) {
-            return atob(encodedData); // Simple Base64 decoding
+        // Function to display the structured data
+        function displayData(data) {
+            const resultDiv = $('#result');
+            resultDiv.empty(); // Clear previous results
+
+            // Format the structured data
+            resultDiv.append('<h2>Decoded Data:</h2>');
+            for (const key in data) {
+                resultDiv.append(`<p><strong>${key}:</strong> ${data[key]}</p>`);
+            }
         }
     </script>
 </body>
