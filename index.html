@@ -10,17 +10,17 @@
 <body>
     <div class="container">
         <h1>Freshers Party Event Pass Generator</h1>
-        <form id="eventPassForm">
+        <form id="eventPassForm" class="form">
             <input type="text" id="name" placeholder="Enter Name" required>
             <input type="text" id="classYear" placeholder="Enter Class/Year" required>
-            <button type="submit">Generate Event Pass</button>
-            <button type="button" id="goToScannerBtn">Go to Scanner</button>
+            <button type="submit" class="btn">Generate Event Pass</button>
+            <button type="button" id="goToScannerBtn" class="btn secondary">Go to Scanner</button>
         </form>
-        <div id="passPreview" class="pass-preview">
+
+        <div id="passPreview" class="pass-preview" style="display: none;">
             <h2>Event Pass Preview</h2>
             <div id="passContent"></div>
-            <button id="downloadBtn" style="display:none;">Download Pass as PDF</button>
-            <button id="scanQrBtn" style="display:none;"><a href="scan.html">Scan QR Code</a></button>
+            <button id="downloadBtn" class="btn" style="display: none;">Download Pass as PDF</button>
         </div>
     </div>
     <script src="script.js"></script>
